@@ -18,7 +18,7 @@ import github.aq.market.common.OrderType;
 import github.aq.market.common.fruit.FruitOrderGenerator;
 
 @SpringBootApplication
-@ComponentScan
+@ComponentScan(basePackages = {"github.aq.market"})
 @EnableJms
 public class MarketTraderApplication {
 
