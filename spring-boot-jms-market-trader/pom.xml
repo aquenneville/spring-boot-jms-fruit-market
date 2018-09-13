@@ -4,12 +4,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>spring-boot-jms-market</groupId>
-	<artifactId>spring-boot-jms-market</artifactId>
+	<artifactId>spring-boot-jms-market-trader
+    </artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>market</name>
-	<description>Demo market</description>
+	<name>market-trader</name>
+	<description>Demo market trader</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -57,8 +58,9 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+			<version>2.0.2.RELEASE</version>
 		</dependency>
 	</dependencies>
 
