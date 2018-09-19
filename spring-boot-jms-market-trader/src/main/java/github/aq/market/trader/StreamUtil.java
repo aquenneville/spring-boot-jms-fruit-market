@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package github.aq.market.trader;
 
 import java.util.Map;
@@ -13,19 +12,3 @@ public class StreamUtil {
 		return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
 	}
 }
-=======
-package github.aq.market.trader;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
-public class StreamUtil {
-
-	public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
-		Map<Object, Boolean> map = new ConcurrentHashMap<>();
-		return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
-	}
-}
->>>>>>> 8c09f5362fec9c4677e317a88320840f48d842b1

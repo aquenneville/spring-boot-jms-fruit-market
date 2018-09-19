@@ -1,15 +1,9 @@
 package github.aq.market;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import github.aq.market.common.Order;
 import github.aq.market.common.fruit.FruitName;
@@ -21,12 +15,6 @@ public class OrderListener {
     @Autowired(required=true)
     @Qualifier("MarketController")
 	private MarketController marketController;
-	
-//	@Autowired
-//	public OrderListener(MarketController marketController) {
-//	    this.marketController = marketController;
-//	}
-	
 	
 	@JmsListener(destination = ActiveMQConfig.BUY_ORDER_QUEUE, containerFactory = "queueListenerFactory") 
 	public void receiveBuyOrder(OrderMessageRequest orderRequest) {

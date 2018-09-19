@@ -37,15 +37,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-<<<<<<< HEAD
 		</dependency>		
-=======
-		</dependency>
 		<dependency>
 		<groupId>org.apache.activemq</groupId>
 		<artifactId>activemq-all</artifactId>
 		<version>5.15.5</version>
 		</dependency>
->>>>>>> 8c09f5362fec9c4677e317a88320840f48d842b1
   </dependencies>
 </project>
