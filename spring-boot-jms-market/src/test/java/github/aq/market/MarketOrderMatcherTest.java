@@ -1,11 +1,19 @@
 package github.aq.market;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import github.aq.market.common.Account;
@@ -15,15 +23,82 @@ import github.aq.market.common.Transaction;
 import github.aq.market.common.fruit.FruitName;
 
 public class MarketOrderMatcherTest {
-
+	
+	static ExecutorService executor;
+	static Queue<Order> buyQueue;
+	static Queue<Order> sellQueue;
+	List<Transaction> transactions = new ArrayList<>();
+	
+	public class OrderMatchTask implements Runnable {
+		
+		Transaction transaction; 
+		
+		public OrderMatchTask() {
+		}
+		
+		@Override
+		public void run() {
+			MarketOrderMatcher matcher = new MarketOrderMatcher();
+			Order buy = buyQueue.peek();
+			Order sell = sellQueue.peek();
+			if (buy != null || sell != null) {
+				transaction = matcher.updateBalances(buyQueue, sellQueue, buy, sell);
+				transactions.add(transaction);
+			}
+		}
+		
+		public Transaction getTransaction() {
+			return transaction;
+		}
+	}
+	
+	@BeforeClass
+	public static void runOnce() {
+		executor = Executors.newFixedThreadPool(1);
+		buyQueue = new PriorityQueue<Order>();
+		sellQueue = new PriorityQueue<Order>();
+	}
 	
 	@Test
+	public void testTransactionCreation() throws InterruptedException, ExecutionException {
+		Account buyer = new Account();
+		Account seller = new Account();
+		BigDecimal price = new BigDecimal(0.25);
+		Order sell = new Order(buyer, "1", FruitName.APPLE.name(), price, 1, OrderType.SELL);
+		Order sell2 = new Order(buyer, "2", FruitName.APPLE.name(), price, 1, OrderType.SELL);
+		Order sell3 = new Order(buyer, "3", FruitName.APPLE.name(), price, 1, OrderType.SELL);
+		Order buy = new Order(seller, "1", FruitName.APPLE.name(), price, 5, OrderType.BUY);
+		buyQueue.add(buy);
+		sellQueue.add(sell);
+		sellQueue.add(sell2);
+		sellQueue.add(sell3);
+		while(buyQueue.size() > 0 && sellQueue.size() > 0) {
+			System.out.println(buyQueue.size());
+			OrderMatchTask omt = new OrderMatchTask();
+			CompletableFuture cf = new CompletableFuture();
+			CompletableFuture<Void> future = cf.runAsync(omt);
+			if (future != null) {
+				future.get();
+			}
+
+			if (omt.getTransaction() != null) {	
+				System.out.println(omt.getTransaction());
+			} else {
+				System.out.println("transaction could not be created");
+			}
+			System.out.println("Done");
+			
+		}
+		assertTrue(transactions.size() == 3);
+	}
+	
+	//@Test
 	public void testMatchQuantityEqual() {
 		Queue<Order> buyQueue = new PriorityQueue<Order>();
 		Queue<Order> sellQueue = new PriorityQueue<Order>();
 		MarketOrderMatcher matcher = new MarketOrderMatcher();
-		Account buyer = new Account(1L);
-		Account seller = new Account(1L);
+		Account buyer = new Account();
+		Account seller = new Account();
 		BigDecimal price = new BigDecimal(0.25);
 		
 		String orderId = "1";
@@ -42,8 +117,8 @@ public class MarketOrderMatcherTest {
 		Queue<Order> buyQueue = new PriorityQueue<Order>();
 		Queue<Order> sellQueue = new PriorityQueue<Order>();
 		MarketOrderMatcher matcher = new MarketOrderMatcher();
-		Account buyer = new Account(1L);
-		Account seller = new Account(1L);
+		Account buyer = new Account();
+		Account seller = new Account();
 		BigDecimal price = new BigDecimal(0.25);
 		
 		String orderId = "1";
@@ -71,8 +146,8 @@ public class MarketOrderMatcherTest {
 		Queue<Order> buyQueue = new PriorityQueue<Order>();
 		Queue<Order> sellQueue = new PriorityQueue<Order>();
 		MarketOrderMatcher matcher = new MarketOrderMatcher();
-		Account buyer = new Account(1L);
-		Account seller = new Account(1L);
+		Account buyer = new Account();
+		Account seller = new Account();
 		BigDecimal price = new BigDecimal(0.25);
 		
 		String orderId = "1";

@@ -17,7 +17,11 @@ import org.springframework.stereotype.Component;
 public class JmsListenerContainerFactoryProvider {
 
 	@Bean
+<<<<<<< HEAD
+	public JmsListenerContainerFactory<?> queueListenerFactory(ConnectionFactory connectionFactory,
+=======
 	public JmsListenerContainerFactory<?> myFactory(ConnectionFactory connectionFactory,
+>>>>>>> 8c09f5362fec9c4677e317a88320840f48d842b1
 			DefaultJmsListenerContainerFactoryConfigurer configurer) {
 		ActiveMQConnectionFactory cf = (ActiveMQConnectionFactory) connectionFactory;
 		RedeliveryPolicy redeliveryPolicy = new RedeliveryPolicy();
@@ -25,7 +29,11 @@ public class JmsListenerContainerFactoryProvider {
 		cf.setRedeliveryPolicy(redeliveryPolicy);
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 		factory.setConcurrency(String.valueOf(Runtime.getRuntime().availableProcessors()));
+<<<<<<< HEAD
+		factory.setPubSubDomain(false);
+=======
 		factory.setCacheLevelName("CACHE_CONNECTION");
+>>>>>>> 8c09f5362fec9c4677e317a88320840f48d842b1
 		configurer.configure(factory, connectionFactory);
 		return factory;
 	}
@@ -34,7 +42,11 @@ public class JmsListenerContainerFactoryProvider {
     public MessageConverter jacksonJmsMessageConverter() {
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         converter.setTargetType(MessageType.TEXT);
+<<<<<<< HEAD
+        converter.setTypeIdPropertyName("_type");        
+=======
         converter.setTypeIdPropertyName("_type");
+>>>>>>> 8c09f5362fec9c4677e317a88320840f48d842b1
         return converter;
     }
 }
